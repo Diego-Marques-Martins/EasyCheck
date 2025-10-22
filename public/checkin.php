@@ -1,6 +1,19 @@
 <?php
 session_start();
 
+// 🔒 Garante que o usuário esteja logado
+if (!isset($_SESSION['usuario_logado'])) { 
+    header("Location: account/login.php");
+    exit;
+}
+
+$usuario = $_SESSION['usuario_logado'];
+
+// ✅ Garante que a estrutura de reservas do usuário exista
+if (!isset($_SESSION['usuarios'][$usuario]['reservas'])) {
+    $_SESSION['usuarios'][$usuario]['reservas'] = [];
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $idReserva = $_POST['id_reserva'] ?? null;
     $novoNome = trim($_POST['nome_reserva'] ?? '');
@@ -13,26 +26,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $_SESSION['checkin_realizado'] = $idReserva;
 
-    // ✅ Salva informações do check-in na sessão
-    if (isset($_SESSION['reservas'][$idReserva])) {
+    // ✅ Atualiza os dados dentro da conta do usuário logado
+    if (isset($_SESSION['usuarios'][$usuario]['reservas'][$idReserva])) {
         if ($novoNome !== '') {
-            $_SESSION['reservas'][$idReserva]['nome'] = $novoNome;
+            $_SESSION['usuarios'][$usuario]['reservas'][$idReserva]['nome'] = $novoNome;
         }
 
-        $_SESSION['reservas'][$idReserva]['inicio'] = $entrada;
-        $_SESSION['reservas'][$idReserva]['fim'] = $saida;
-        $_SESSION['reservas'][$idReserva]['hospede'] = $nomeHospede;
-        $_SESSION['reservas'][$idReserva]['documento'] = $documento;
-        $_SESSION['reservas'][$idReserva]['telefone'] = $telefone;
-        $_SESSION['reservas'][$idReserva]['email'] = $email;
+        $_SESSION['usuarios'][$usuario]['reservas'][$idReserva]['inicio'] = $entrada;
+        $_SESSION['usuarios'][$usuario]['reservas'][$idReserva]['fim'] = $saida;
+        $_SESSION['usuarios'][$usuario]['reservas'][$idReserva]['hospede'] = $nomeHospede;
+        $_SESSION['usuarios'][$usuario]['reservas'][$idReserva]['documento'] = $documento;
+        $_SESSION['usuarios'][$usuario]['reservas'][$idReserva]['telefone'] = $telefone;
+        $_SESSION['usuarios'][$usuario]['reservas'][$idReserva]['email'] = $email;
     }
 
     header("Location: index.php");
     exit;
 }
 
+// ✅ Pega o ID da reserva e o nome dentro da conta do usuário
 $idReserva = $_GET['id'] ?? null;
-$reservaNome = $_SESSION['reservas'][$idReserva]['nome'] ?? 'Nova Reserva';
+$reservaNome = $_SESSION['usuarios'][$usuario]['reservas'][$idReserva]['nome'] ?? 'Nova Reserva';
 ?>
 
 <?php require_once("./includes/page-top.php") ?>

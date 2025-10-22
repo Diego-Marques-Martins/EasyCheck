@@ -1,22 +1,29 @@
 <?php
 session_start();
 
-// 🔁 Limpar tudo
+// 🔒 Verifica se o usuário está logado
+if (!isset($_SESSION['usuario_logado'])) { 
+    header("Location: account/login.php");
+    exit;
+}
+
+$usuario = $_SESSION['usuario_logado'];
+
+// 🧩 Cria a estrutura de reservas do usuário se não existir
+if (!isset($_SESSION['usuarios'][$usuario]['reservas'])) {
+    $_SESSION['usuarios'][$usuario]['reservas'] = [];
+}
+
+$reservas = $_SESSION['usuarios'][$usuario]['reservas'];
+
+// 🧹 Limpar todas as reservas do usuário
 if (isset($_GET['reset'])) {
-    session_unset();
-    session_destroy();
+    $_SESSION['usuarios'][$usuario]['reservas'] = [];
     header("Location: index.php");
     exit;
 }
 
-// ✅ Cria a estrutura de reservas se não existir
-if (!isset($_SESSION['reservas'])) {
-    $_SESSION['reservas'] = [];
-}
-
-$reservas = $_SESSION['reservas'];
-
-// ✅ Criar nova reserva
+// ➕ Criar nova reserva
 if (isset($_GET['novo'])) {
     $novo_id = empty($reservas) ? 1 : (max(array_keys($reservas)) + 1);
 
@@ -30,18 +37,18 @@ if (isset($_GET['novo'])) {
         'finalizada' => false
     ];
 
-    $_SESSION['reservas'] = $reservas;
+    $_SESSION['usuarios'][$usuario]['reservas'] = $reservas;
     header("Location: index.php");
     exit;
 }
 
-// ✅ Excluir ou cancelar reserva
+// ❌ Excluir uma reserva
 if (isset($_GET['excluir'])) {
     $idExcluir = $_GET['excluir'];
     if (isset($reservas[$idExcluir])) {
         unset($reservas[$idExcluir]);
     }
-    $_SESSION['reservas'] = $reservas;
+    $_SESSION['usuarios'][$usuario]['reservas'] = $reservas;
     header("Location: index.php");
     exit;
 }
@@ -54,10 +61,8 @@ if (isset($_SESSION['checkin_realizado'])) {
         $reservas[$id]['finalizada'] = true;
     }
     unset($_SESSION['checkin_realizado']);
+    $_SESSION['usuarios'][$usuario]['reservas'] = $reservas;
 }
-
-// ✅ Salvar tudo na sessão
-$_SESSION['reservas'] = $reservas;
 
 $titulo = "Minhas Reservas";
 ?>
@@ -65,7 +70,10 @@ $titulo = "Minhas Reservas";
 <?php require_once("./includes/page-top.php"); ?>
 
 <div class="container py-4" style="max-width: 600px;">
-  <h4 class="fw-bold mb-1">Olá, Usuário</h4>
+  <div class="d-flex justify-content-between align-items-center mb-2">
+    <h4 class="fw-bold mb-0">Olá, <?= htmlspecialchars($usuario) ?>!</h4>
+    <a href="account/logout.php" class="btn btn-outline-secondary btn-sm">Sair</a>
+  </div>
   <p class="text-muted mb-4">Aqui estão suas reservas</p>
 
   <!-- 🔹 Botões principais -->
@@ -88,7 +96,7 @@ $titulo = "Minhas Reservas";
 
   <!-- 🔹 Lista de reservas -->
   <?php foreach ($reservas as $reserva): ?>
-    <div class="<?= $reserva['finalizada'] ? 'reserva-finalizada' : 'reserva-card' ?>">
+    <div class="<?= $reserva['finalizada'] ? 'reserva-finalizada' : 'reserva-card' ?> p-3 mb-3 shadow-sm rounded bg-white">
       <div class="d-flex justify-content-between align-items-center mb-2">
         <div>
           <h5 class="fw-bold mb-1"><?= htmlspecialchars($reserva['nome']) ?></h5>
