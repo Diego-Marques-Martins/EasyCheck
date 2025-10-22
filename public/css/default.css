@@ -1,4 +1,50 @@
+/* === ESTILOS GERAIS === */
 body {
-    font-family: sans-serif;
-    text-align: center;
+  background-color: #f5f6f8;
+  font-family: 'Inter', sans-serif;
+}
+
+/* === CARDS DE RESERVAS === */
+.reserva-card {
+  border: 1px solid #ccc;
+  border-radius: 15px;
+  background: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.reserva-finalizada {
+  border: 1px solid #ddd;
+  border-radius: 15px;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+/* === BOTÕES === */
+.btn-checkin {
+  background-color: #00bcd4;
+  color: #fff;
+  font-weight: 600;
+  border-radius: 10px;
+  border: none;
+  transition: background-color 0.3s;
+}
+
+.btn-checkin:hover {
+  background-color: #009bb0;
+  color: #fff;
+}
+
+/* === BADGES === */
+.badge {
+  border-radius: 10px;
+  font-weight: 500;
+}
+
+/* === TEXTOS === */
+.text-secondary {
+  color: #6c757d !important;
 }
