@@ -72,7 +72,6 @@ $titulo = "Minhas Reservas";
 <div class="container py-4" style="max-width: 600px;">
   <div class="d-flex justify-content-between align-items-center mb-2">
     <h4 class="fw-bold mb-0">Olá, <?= htmlspecialchars($usuario) ?>!</h4>
-    <a href="account/logout.php" class="btn btn-outline-secondary btn-sm">Sair</a>
   </div>
   <p class="text-muted mb-4">Aqui estão suas reservas</p>
 

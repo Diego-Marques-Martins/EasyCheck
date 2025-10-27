@@ -22,7 +22,11 @@
                     <li class="nav-item">
                         <a class="nav-link" href="index.php">Home Page</a>
                     </li>
+                    
                 </ul>
             </div>
+            <h4 class="fw-bold mb-0"><?= htmlspecialchars($usuario) ?></h4>
+            <img src="./img/usuario.png" alt="" width="32" height="32">
+            <a href="account/logout.php" class="btn btn-outline-secondary btn-sm">Sair</a>
         </div>
     </nav>
